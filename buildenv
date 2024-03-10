@@ -1,0 +1,47 @@
+# Update bump details accordingly. Use bump check to confirm.
+# bump: lpeg-version /LPEG_VERSION="(.*)"/ https://github.com/neovim/deps/raw/d495ee6f79e7962a53ad79670cb92488abe0b9b4/opt/lpeg-1.1.0.tar.gz|semver:*
+# LPEG_VERSION="V.R.M" # Specify a stable release
+# export ZOPEN_STABLE_TAG="v${LPEG_VERSION}"
+export ZOPEN_STABLE_URL="https://github.com/neovim/deps/raw/d495ee6f79e7962a53ad79670cb92488abe0b9b4/opt/lpeg-1.1.0.tar.gz"
+export ZOPEN_STABLE_DEPS="zoslib make lua gzip tar"
+export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="development"
+export ZOPEN_COMP="CLANG"
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_EXTRA_CPPFLAGS="-fvisibility=default"
+export ZOPEN_INSTALL="zopen_install"
+
+zopen_append_to_env()
+{
+cat <<ZZ
+if [ ! -z "\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+  export ZOPEN_EXTRA_CFLAGS="\${ZOPEN_EXTRA_CFLAGS} -I\$PWD/include"
+  export ZOPEN_EXTRA_LIBS="\${ZOPEN_EXTRA_LIBS} \$PWD/lib/lpeg.x"
+fi
+ZZ
+}
+
+zopen_install() {
+  mkdir -p $ZOPEN_INSTALL_DIR/lib
+  cp *.x *.so *.lua $ZOPEN_INSTALL_DIR/lib/
+}
+
+zopen_check_results()
+{
+  dir="$1"
+  pfx="$2"
+  chk="$1/$2_check.log"
+
+  # Echo the following information to gauge build health
+  echo "actualFailures:0"
+  echo "totalTests:1"
+  echo "expectedFailures:0"
+  echo "expectedTotalTests:1"
+}
+
+zopen_get_version()
+{
+  # Modify to echo the version of your tool/library
+  # Rather than hardcoding the version, obtain the version by running the tool/library
+  echo "1.0.0"
+}
